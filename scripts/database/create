@@ -1,3 +1,9 @@
+CREATE TABLE event_listener_config (
+    id SERIAL,
+    lastCrawled TIMESTAMPTZ,
+    lastCrawledLedgerId BIGINT
+);
+
 CREATE TABLE swaps (
     id SERIAL,
     eventId varchar,

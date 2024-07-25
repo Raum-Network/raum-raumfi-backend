@@ -9,6 +9,9 @@ const startJob = async () => {
         console.error("Error occurred in running the job: ", error);
     }
 };
+
+startJob();
+
 cron.schedule("*/5 * * * *", startJob, {
     scheduled: true,
     timezone: "UTC",

@@ -1,6 +1,6 @@
 var StellarSdk = require("stellar-sdk");
 const config = require("../config");
-const { swapTransaction, addLiquidityTransaction, removeLiquidityTransaction } = require("./dbInsert");
+const { swapTransaction, addLiquidityTransaction, removeLiquidityTransaction, getLastCrawledLedger, updateLastCrawledLedger } = require("./dbInsert");
 
 const routerEventListener = async (startLedgerNumber) => {
     let requestBody = {
@@ -29,13 +29,6 @@ const routerEventListener = async (startLedgerNumber) => {
     return events.json();
 }
 
-const parseSwapEvent = async (swapEvent) => {
-    const base64XDR = swapEvent.value;
-    const xdrObj = StellarSdk.xdr.ScVal.fromXDR(base64XDR, 'base64');
-    const data = StellarSdk.scValToNative(xdrObj);
-    return data;
-}
-
 const decodeValue = async (value) => {
     const xdrObj = StellarSdk.xdr.ScVal.fromXDR(value, 'base64');
     const decodedValue = StellarSdk.scValToNative(xdrObj);
@@ -43,22 +36,25 @@ const decodeValue = async (value) => {
 }
 
 const fetchEvents = async () => {
-    // @TODO: Ledger number to be made dynamic and fetched from the DB
-    const routerEvents = await routerEventListener(522907);
-    const events = routerEvents.result.events;
-    for (var i=0; i<events.length; i++) {
-        const event = events[i];
-        const decodedValue = await decodeValue(event.value);
-        if (event.topic[1] === "AAAADwAAABNhZGRfbGlxdWlkaXR5X2V2ZW50AA==") {
-            // Add Liquidity
-            await addLiquidityTransaction(event, decodedValue)
-        } else if (event.topic[1] === "AAAADwAAABZyZW1vdmVfbGlxdWlkaXR5X2V2ZW50AAA=") {
-            // Remove Liquidity
-            await removeLiquidityTransaction(event, decodedValue)
-        } else if (event.topic[1] === "AAAADwAAABFzd2FwX3Rva2Vuc19ldmVudAAAAA==") {
-            // Swap
-            await swapTransaction(event, decodedValue)
+    const lastCrawled = await getLastCrawledLedger();
+    const routerEvents = await routerEventListener(parseInt(lastCrawled.lastcrawledledgerid, 10));
+    if (routerEvents.result) {
+        const events = routerEvents.result.events;
+        for (var i=0; i<events.length; i++) {
+            const event = events[i];
+            const decodedValue = await decodeValue(event.value);
+            if (event.topic[1] === "AAAADwAAABNhZGRfbGlxdWlkaXR5X2V2ZW50AA==") {
+                // Add Liquidity
+                await addLiquidityTransaction(event, decodedValue)
+            } else if (event.topic[1] === "AAAADwAAABZyZW1vdmVfbGlxdWlkaXR5X2V2ZW50AAA=") {
+                // Remove Liquidity
+                await removeLiquidityTransaction(event, decodedValue)
+            } else if (event.topic[1] === "AAAADwAAABFzd2FwX3Rva2Vuc19ldmVudAAAAA==") {
+                // Swap
+                await swapTransaction(event, decodedValue)
+            }
         }
+        await updateLastCrawledLedger(routerEvents.result.latestLedger, lastCrawled.id)
     }
 }
 

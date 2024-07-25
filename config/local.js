@@ -14,10 +14,10 @@ module.exports = {
         ROUTER_ADDRESS: "CBNPQTURFVN4GQGJQFJFZ6PAW6KTE3PF4YUQ4NVKFLOHEWWAHKFNKBTN"
     },
     "database": {
-        USER: "postgres",
-        HOST: "localhost",
-        DATABASE: "stellar",
-        PASSWORD: "postgres",
-        PORT: 5432
+        USER: "doadmin",
+        HOST: "private-db-postgresql-rn-do-user-17300065-0.i.db.ondigitalocean.com",
+        DATABASE: "defaultdb",
+        PASSWORD: "AVNS_TL1ybg8qYjPB-E8capC",
+        PORT: 25060
     }
 };

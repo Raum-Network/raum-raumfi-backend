@@ -1,12 +1,17 @@
 const { Pool } = require('pg');
 const config = require("../config");
 
+const sslConfig = {
+    rejectUnauthorized: false
+};
+
 const pool = new Pool({
     user: config.database.USER,
     host: config.database.HOST,
     database: config.database.DATABASE,
     password: config.database.PASSWORD,
     port: config.database.PORT,
+    ssl: sslConfig,
 });
 
 pool.on('connect', () => {

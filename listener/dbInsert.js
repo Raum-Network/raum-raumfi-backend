@@ -1,5 +1,46 @@
 const db = require("../db");
 
+const getLastCrawledLedger = async () => {
+    const client = await db.pool.connect();
+    try {
+        const query = `
+            SELECT *
+            FROM event_listener_config
+            ORDER BY lastCrawled DESC
+            LIMIT 1;
+        `;
+        const res = await client.query(query);
+        if (res.rows.length > 0) {
+            return res.rows[0];
+        } else {
+            return 720319;
+        }
+    } catch (err) {
+        return 720319;
+    } finally {
+        client.release();
+    }
+}
+
+const updateLastCrawledLedger = async (newValue, id) => {
+    const client = await db.pool.connect();
+    try {
+        const query = `
+            UPDATE event_listener_config
+            SET lastCrawledLedgerId = $1, lastCrawled = NOW()
+            WHERE id = $2;
+        `;
+        const values = [newValue, id];
+        const res = await client.query(query, values);
+        console.log(res);
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Error inserting data', err);
+    } finally {
+        client.release();
+    }
+}
+
 const swapTransaction = async (event, decodedValue) => {
     const client = await db.pool.connect();
     try {
@@ -63,6 +104,8 @@ const removeLiquidityTransaction = async (event, decodedValue) => {
 module.exports = {
     swapTransaction,
     addLiquidityTransaction,
-    removeLiquidityTransaction
+    removeLiquidityTransaction,
+    getLastCrawledLedger,
+    updateLastCrawledLedger
 };
 
