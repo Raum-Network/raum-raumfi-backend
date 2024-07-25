@@ -17,7 +17,7 @@ module.exports = {
         USER: "doadmin",
         HOST: "private-db-postgresql-rn-do-user-17300065-0.i.db.ondigitalocean.com",
         DATABASE: "defaultdb",
-        PASSWORD: "AVNS_TL1ybg8qYjPB-E8capC",
+        PASSWORD: "",
         PORT: 25060
     }
 };
