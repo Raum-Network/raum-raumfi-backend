@@ -1,5 +1,6 @@
 var StellarSdk = require("stellar-sdk");
 const config = require("../config");
+const { swapTransaction, addLiquidityTransaction, removeLiquidityTransaction } = require("./dbInsert");
 
 const routerEventListener = async (startLedgerNumber) => {
     let requestBody = {
@@ -42,26 +43,25 @@ const decodeValue = async (value) => {
 }
 
 const fetchEvents = async () => {
+    // @TODO: Ledger number to be made dynamic and fetched from the DB
     const routerEvents = await routerEventListener(522907);
     const events = routerEvents.result.events;
     for (var i=0; i<events.length; i++) {
         const event = events[i];
-        console.log(event.topic[1])
         const decodedValue = await decodeValue(event.value);
         if (event.topic[1] === "AAAADwAAABNhZGRfbGlxdWlkaXR5X2V2ZW50AA==") {
             // Add Liquidity
-            console.log(1)
+            await addLiquidityTransaction(event, decodedValue)
         } else if (event.topic[1] === "AAAADwAAABZyZW1vdmVfbGlxdWlkaXR5X2V2ZW50AAA=") {
             // Remove Liquidity
-            console.log(2)
+            await removeLiquidityTransaction(event, decodedValue)
         } else if (event.topic[1] === "AAAADwAAABFzd2FwX3Rva2Vuc19ldmVudAAAAA==") {
             // Swap
-            console.log(3)
+            await swapTransaction(event, decodedValue)
         }
     }
-    // const base64XDR = json.result.events[0].value;
-    
-
 }
 
-fetchEvents();
+module.exports = {
+    fetchEvents
+};

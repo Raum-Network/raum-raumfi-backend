@@ -1,0 +1,45 @@
+CREATE TABLE swaps (
+    id SERIAL,
+    eventId varchar,
+    txHash varchar UNIQUE,
+    amountIn BIGINT,
+    amountOut BIGINT,
+    tokenAAddress varchar,
+    tokenBAddress varchar,
+    receiver varchar,
+    timestamp TIMESTAMPTZ,
+    PRIMARY KEY (id, timestamp),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE add_liquidities (
+    id SERIAL,
+    eventId varchar,
+    txHash varchar UNIQUE,
+    amountA BIGINT,
+    amountB BIGINT,
+    liquidity BIGINT,
+    pair varchar,
+    receiver varchar,
+    tokenA varchar,
+    tokenB varchar,
+    timestamp TIMESTAMPTZ,
+    PRIMARY KEY (id, timestamp),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE remove_liquidities (
+    id SERIAL,
+    eventId varchar,
+    txHash varchar UNIQUE,
+    amountA BIGINT,
+    amountB BIGINT,
+    liquidity BIGINT,
+    pair varchar,
+    receiver varchar,
+    tokenA varchar,
+    tokenB varchar,
+    timestamp TIMESTAMPTZ,
+    PRIMARY KEY (id, timestamp),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

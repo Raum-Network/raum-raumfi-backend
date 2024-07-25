@@ -12,5 +12,12 @@ module.exports = {
     "raumNetwork": {
         FACTORY_ADDRESS: "",
         ROUTER_ADDRESS: "CBNPQTURFVN4GQGJQFJFZ6PAW6KTE3PF4YUQ4NVKFLOHEWWAHKFNKBTN"
+    },
+    "database": {
+        USER: "postgres",
+        HOST: "localhost",
+        DATABASE: "stellar",
+        PASSWORD: "postgres",
+        PORT: 5432
     }
 };
