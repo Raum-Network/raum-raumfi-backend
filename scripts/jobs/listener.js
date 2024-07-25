@@ -10,7 +10,7 @@ const startJob = async () => {
     }
 };
 
-startJob();
+// startJob();
 
 cron.schedule("*/5 * * * *", startJob, {
     scheduled: true,
