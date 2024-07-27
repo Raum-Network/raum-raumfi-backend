@@ -12,3 +12,8 @@ npm i
 ```
 npm start
 ```
+
+## Run the Soroban Listener
+```
+npm run listener
+```
