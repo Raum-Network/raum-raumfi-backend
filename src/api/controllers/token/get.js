@@ -1,14 +1,23 @@
 const { getStellarPublicAssetData } = require("../../../utils/helpers");
 
 exports.getTokenStats = async (req, res) => {
-  const stellarPublicData = await getStellarPublicAssetData();
-  const stellarRecordsPublicData = stellarPublicData["_embedded"]["records"];
+  const stellarRecordsPublicData = await getStellarPublicAssetData();
+  // const stellarRecordsPublicData = stellarPublicData["_embedded"]["records"];
   const response = [];
   for (record of stellarRecordsPublicData) {
     if (record["asset"] == "XLM") {
       response.push({
         name: "Stellar",
         symbol: "XLM",
+        price: record["price7d"].at(-1)[1],
+        "24hrChange": (
+          ((record["price7d"].at(-1)[1] - record["price7d"].at(-2)[1]) /
+            record["price7d"].at(-2)[1]) *
+          100
+        ).toFixed(2),
+        "7dayVolume": record["volume7d"],
+        marketCap: record["supply"],
+        "7dChart": record["price7d"],
       });
     }
     if (
@@ -18,6 +27,15 @@ exports.getTokenStats = async (req, res) => {
       response.push({
         name: "EUROC",
         symbol: "EUROC",
+        price: record["price7d"].at(-1)[1],
+        "24hrChange": (
+          ((record["price7d"].at(-1)[1] - record["price7d"].at(-2)[1]) /
+            record["price7d"].at(-2)[1]) *
+          100
+        ).toFixed(2),
+        "7dayVolume": record["volume7d"],
+        marketCap: record["supply"],
+        "7dChart": record["price7d"],
       });
     }
     if (
@@ -27,19 +45,17 @@ exports.getTokenStats = async (req, res) => {
       response.push({
         name: "USDC",
         symbol: "USDC",
+        price: record["price7d"].at(-1)[1],
+        "24hrChange": (
+          ((record["price7d"].at(-1)[1] - record["price7d"].at(-2)[1]) /
+            record["price7d"].at(-2)[1]) *
+          100
+        ).toFixed(2),
+        "7dayVolume": record["volume7d"],
+        marketCap: record["supply"],
+        "7dChart": record["price7d"],
       });
     }
-    response.push({
-      price: record["price7d"].at(-1)[1],
-      "24hrChange": (
-        ((record["price7d"].at(-1)[1] - record["price7d"].at(-2)[1]) /
-          record["price7d"].at(-2)[1]) *
-        100
-      ).toFixed(2),
-      "7dayVolume": record["volume7d"],
-      marketCap: record["supply"],
-      "7dChart": record["price7d"],
-    });
   }
   res.status(200).json({
     success: true,

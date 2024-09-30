@@ -13,9 +13,11 @@ const getLastCrawledLedger = async () => {
         if (res.rows.length > 0) {
             return res.rows[0];
         } else {
+            console.log(1)
             return 720319;
         }
     } catch (err) {
+        console.log(err)
         return 720319;
     } finally {
         client.release();

@@ -38,6 +38,7 @@ const decodeValue = async (value) => {
 const fetchEvents = async () => {
     const lastCrawled = await getLastCrawledLedger();
     const routerEvents = await routerEventListener(parseInt(lastCrawled.lastcrawledledgerid, 10));
+    console.log(routerEvents)
     if (routerEvents.result) {
         const events = routerEvents.result.events;
         for (var i=0; i<events.length; i++) {
