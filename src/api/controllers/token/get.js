@@ -56,24 +56,24 @@ exports.getTokenStats = async (req, res) => {
         "7dChart": record["price7d"],
       });
     }
-    if (
-      record["asset"] ==
-      "LSP-GAB7STHVD5BDH3EEYXPI3OM7PCS4V443PYB5FNT6CFGJVPDLMKDM24WK-1"
-    ) {
-      response.push({
-        name: "LSP",
-        symbol: "LSP",
-        price: record["price7d"].at(-1)[1],
-        "24hrChange": (
-          ((record["price7d"].at(-1)[1] - record["price7d"].at(-2)[1]) /
-            record["price7d"].at(-2)[1]) *
-          100
-        ).toFixed(2),
-        "7dayVolume": record["volume7d"],
-        marketCap: record["supply"],
-        "7dChart": record["price7d"],
-      });
-    }
+    // if (
+    //   record["asset"] ==
+    //   "LSP-GAB7STHVD5BDH3EEYXPI3OM7PCS4V443PYB5FNT6CFGJVPDLMKDM24WK-1"
+    // ) {
+    //   response.push({
+    //     name: "LSP",
+    //     symbol: "LSP",
+    //     price: record["price7d"].at(-1)[1],
+    //     "24hrChange": (
+    //       ((record["price7d"].at(-1)[1] - record["price7d"].at(-2)[1]) /
+    //         record["price7d"].at(-2)[1]) *
+    //       100
+    //     ).toFixed(2),
+    //     "7dayVolume": record["volume7d"],
+    //     marketCap: record["supply"],
+    //     "7dChart": record["price7d"],
+    //   });
+    // }
   }
   res.status(200).json({
     success: true,
